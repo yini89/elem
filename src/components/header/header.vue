@@ -17,20 +17,38 @@
           <span class="text">{{seller.supports[0].description}}</span>
         </div>
       </div>
-      <div class="support-count" v-if="seller.supports">
+      <div class="support-count" v-if="seller.supports" @click="showDetail">
         <span class="count">{{seller.supports.length}}个</span>
         <span class="icon-keyboard_arrow_right"></span>
       </div>
     </div>
     <div class="bulletin-wrapper">
-      <span class="bulletin-title"></span>
-      <span class="bulletin-text">{{seller.bulletin}}</span>
+      <span class="bulletin-title"></span><span class="bulletin-text">{{seller.bulletin}}</span>
       <span class="icon-keyboard_arrow_right"></span>
     </div>
+    <div class="background">
+      <img :src="seller.avatar" >
+    </div>
+    <transition name="fade">
+      <div class="detail-wrapper" v-show="detailShow">
+        <div class="show-wrapper clearfix">
+          <div class="detail-content">
+            <h1 class="title">{{seller.name}}</h1>
+            <div class="star-wrapper">
+              <star :size="48" :score="seller.score"></star>
+            </div>
+          </div>
+        </div>
+        <div class="close-wrapper" @click="detailShow=false">
+          <span class="icon-close"></span>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import star from '../star/star';
   export default {
     props: {
       seller: {
@@ -39,10 +57,17 @@
     },
     data() {
       return {
+        detailShow: false,
         classMap: ['decrease', 'discount', 'guarantee', 'invoice', 'special']
       };
     },
-    mounted() {
+    components: {
+      star
+    },
+    methods: {
+      showDetail() {
+        this.detailShow = true;
+      }
     }
   };
 </script>
@@ -133,14 +158,13 @@
       padding: 0 22px 0 12px
       line-height: 28px
       background: rgba(7, 17, 27, 0.2)
-      font-size: 0
       white-space: nowrap
       overflow: hidden
       text-overflow: ellipsis
       .bulletin-title
         display: inline-block
         vertical-align: top
-        margin-top: 8px
+        margin-top: 7px
         width: 22px
         height: 12px
         bg-img('bulletin')
@@ -152,6 +176,53 @@
         font-size: 10px
       .icon-keyboard_arrow_right
         position: absolute
+        vertical-align: top
         right: 12px
         top: 8px
+    .background
+      position: absolute
+      left: 0
+      top: 0
+      width: 100%
+      height: 100%
+      z-index: -1
+      backdrop-filter: blur(10px)
+      img
+        width: 100%
+        height: 100%
+    .detail-wrapper
+      position: fixed
+      z-index: 100
+      width: 100%
+      height: 100%
+      left: 0
+      top: 0
+      overflow: auto
+      background-color: rgba(7, 17, 27, 0.8)
+      backdrop-filter: blur(10px)
+      &.fade-enter-active, &.fade-leave-active
+        transition: all 0.4s
+        opacity: 1
+      &.fade-enter, &.fade-leave-to
+        opacity: 0
+      .show-wrapper
+        min-height: 100%
+        width: 100%
+        .detail-content
+          margin-top: 64px
+          padding-bottom: 64px
+          .title
+            line-height: 16px
+            font-size: 16px
+            font-weight: 700
+            color: #fff
+            text-align: center
+      .close-wrapper
+        position: relative
+        margin: -64px auto 0 auto
+        width: 32px
+        height: 32px
+        font-size: 32px
+        clear: both
+        color: rgba(255, 255, 255, 0.5)
 </style>
