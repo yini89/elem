@@ -37,6 +37,25 @@
             <div class="star-wrapper">
               <star :size="48" :score="seller.score"></star>
             </div>
+            <div class="second-title">
+              <div class="line"></div>
+              <div class="text">优惠信息</div>
+              <div class="line"></div>
+            </div>
+            <ul class="support" v-if="seller.supports">
+              <li class="support-item" v-for="(item, index) in seller.supports" :key="index">
+                <span class="icon" :class="classMap[item.type]"></span>
+                <span class="text">{{item.description}}</span>
+              </li>
+            </ul>
+            <div class="second-title">
+              <div class="line"></div>
+              <div class="text">商家公告</div>
+              <div class="line"></div>
+            </div>
+            <div class="bulletin">
+              <p class="bulletin-content">{{seller.bulletin}}</p>
+            </div>
           </div>
         </div>
         <div class="close-wrapper" @click="detailShow=false">
@@ -78,6 +97,7 @@
     position: relative
     color: #fff
     background-color: rgba(7, 17, 27, 0.5)
+    overflow: hidden
     .content-wrapper
       position: relative
       padding: 24px
@@ -186,7 +206,7 @@
       width: 100%
       height: 100%
       z-index: -1
-      backdrop-filter: blur(10px)
+      filter: blur(10px)
       img
         width: 100%
         height: 100%
@@ -217,6 +237,63 @@
             font-weight: 700
             color: #fff
             text-align: center
+          .star-wrapper
+            margin: 16px auto 0 auto
+            padding: 2px 0
+            text-align: center
+          .second-title
+            display: flex
+            width: 80%
+            margin: 28px auto 24px auto
+            .line
+              position: relative
+              flex: 1
+              top: -6px
+              border-bottom: 1px solid rgba(255, 255, 255, 0.2)
+            .text
+              line-height: 14px
+              font-size: 14px
+              font-weight: 700
+              color: #fff
+              margin: 0 12px
+          .support
+            width: 80%
+            margin: 0 auto
+            .support-item
+              margin-bottom: 12px
+              padding: 0 12px
+              font-size: 0
+              &:last-child
+                margin-bottom: 0
+              .icon
+                display: inline-block
+                vertical-align: top
+                width: 16px
+                height: 16px
+                margin-right: 6px
+                background-size: 16px 16px
+                background-repeat: no-repeat
+                &.decrease
+                  bg-img('decrease_2')
+                &.discount
+                  bg-img('discount_2')
+                &.guarantee
+                  bg-img('guarantee_2')
+                &.invoice
+                  bg-img('invoice_2')
+                &.special
+                  bg-img('special_2')
+              .text
+                line-height: 12px
+                font-size: 12px
+                color: #fff
+          .bulletin
+            width: 80%
+            margin: 0 auto
+            .bulletin-content
+              padding: 0 12px
+              line-height: 24px
+              font-size: 12px
       .close-wrapper
         position: relative
         margin: -64px auto 0 auto
