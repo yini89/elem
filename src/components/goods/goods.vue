@@ -38,7 +38,7 @@
         </li>
       </ul>
     </div>
-    <shopCart></shopCart>
+    <shopCart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopCart>
   </div>
 </template>
 
@@ -47,6 +47,11 @@
   import cartControl from '../cartControl/cartControl';
   import shopCart from '../shopCart/shopCart';
   export default {
+    props: {
+      seller: {
+        type: Object
+      }
+    },
     data() {
       return {
         goods: [],
