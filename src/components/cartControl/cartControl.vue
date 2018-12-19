@@ -5,8 +5,8 @@
         <span class="icon-remove_circle_outline"></span>
       </div>
     </transition>
-    <span class="count" v-if="food.count > 0">{{food.count}}</span>
-    <span @click.stop.prevent="addCount" class="icon-add_circle"></span>
+    <div class="count" v-if="food.count > 0">{{food.count}}</div>
+    <div @click.stop.prevent="addCount" class="icon-add_circle"></div>
   </div>
 </template>
 
@@ -32,6 +32,7 @@
         } else {
           this.food.count++;
         }
+        this.$emit('cartAdd', event.target);
       },
       decreaseCount(event) {
         if (!event._constructed) {
@@ -50,7 +51,7 @@
       display: inline-block
       vertical-align: top
       &.move-enter-active, &.move-leave-active
-        transition: all 0.4s
+        transition: all 0.4s linear
         transform: translate3d(0, 0, 0)
         .icon-remove_circle_outline
           transition: all 0.4s

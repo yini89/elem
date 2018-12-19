@@ -30,7 +30,7 @@
                   <span class="old" v-show="food.oldPrice"><span class="uom">￥</span>{{food.oldPrice}}</span>
                 </div>
                 <div class="cart-control-wrapper">
-                  <cartControl></cartControl>
+                  <cartControl @cartAdd="cartAdd"></cartControl>
                 </div>
               </div>
             </li>
@@ -38,7 +38,7 @@
         </li>
       </ul>
     </div>
-    <shopCart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopCart>
+    <shopCart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" ref="shopCart"></shopCart>
   </div>
 </template>
 
@@ -80,6 +80,9 @@
       }
     },
     methods: {
+      cartAdd(target) {
+        this.$refs.shopCart.drop(target);
+      },
       getGoodsData() {
         this.$axios.get('/api/goods').then((res) => {
           this.goods = res.data.data;
