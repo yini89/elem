@@ -14,7 +14,7 @@
         <li class="food-list food-list-hook" v-for="(good, index) in goods" :key="index">
           <h2 class="title">{{good.name}}</h2>
           <ul>
-            <li class="food-item" v-for="(food, idx) in good.foods" :key="idx">
+            <li class="food-item" v-for="(food, idx) in good.foods" :key="idx" @click.stop.prevent="goFood(food, $event)">
               <div class="icon">
                 <img :src="food.icon" width="57" height="57">
               </div>
@@ -30,7 +30,7 @@
                   <span class="old" v-show="food.oldPrice"><span class="uom">￥</span>{{food.oldPrice}}</span>
                 </div>
                 <div class="cart-control-wrapper">
-                  <cartControl @cartAdd="cartAdd"></cartControl>
+                  <cartControl :food="food" @cartAdd="cartAdd"></cartControl>
                 </div>
               </div>
             </li>
@@ -38,7 +38,8 @@
         </li>
       </ul>
     </div>
-    <shopCart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" ref="shopCart"></shopCart>
+    <shopCart :select-food="selectedFood" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" ref="shopCart"></shopCart>
+    <food ref="food" :food="foodSelected"></food>
   </div>
 </template>
 
@@ -46,6 +47,7 @@
   import BScroll from 'better-scroll';
   import cartControl from '../cartControl/cartControl';
   import shopCart from '../shopCart/shopCart';
+  import food from '../food/food';
   export default {
     props: {
       seller: {
@@ -57,12 +59,14 @@
         goods: [],
         classMap: ['decrease', 'discount', 'guarantee', 'invoice', 'special'],
         heightList: [],
-        scrollY: 0
+        scrollY: 0,
+        foodSelected: {}
       };
     },
     components: {
       cartControl,
-      shopCart
+      shopCart,
+      food
     },
     created() {
       this.getGoodsData();
@@ -77,11 +81,31 @@
           }
         }
         return 0;
+      },
+      selectedFood() {
+        let arr = [];
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              arr.push(food);
+            }
+          });
+        });
+        return arr;
       }
     },
     methods: {
+      goFood(food, event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.foodSelected = food;
+        this.$refs.food.show();
+      },
       cartAdd(target) {
-        this.$refs.shopCart.drop(target);
+        this.$nextTick(() => {
+          this.$refs.shopCart.drop(target);
+        });
       },
       getGoodsData() {
         this.$axios.get('/api/goods').then((res) => {
